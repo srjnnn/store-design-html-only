@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>थोक बजार — Wholesale Retail System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #1a1a2e;
+    --ink2:      #4a4a6a;
+    --ink3:      #8888aa;
+    --surface:   #ffffff;
+    --surface2:  #f5f5fa;
+    --surface3:  #eeeef8;
+    --accent:    #2563eb;
+    --accent2:   #1d4ed8;
+    --green:     #16a34a;
+    --red:       #dc2626;
+    --amber:     #d97706;
+    --teal:      #0891b2;
+    --border:    rgba(0,0,0,0.08);
+    --border2:   rgba(0,0,0,0.13);
+    --nav-bg:    #1a1a2e;
+    --sidebar-bg:#111827;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font:      'DM Sans', system-ui, sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+  }
+
+  html, body {
+    font-family: var(--font);
+    background: #e8e8f0;
+    min-height: 100vh;
+    padding: 32px;
+    color: var(--ink);
+  }
+
+  /* ── Layout ── */
+  .app {
+    width: 1280px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border2);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    background: var(--surface2);
+    display: grid;
+    grid-template-rows: 56px 1fr;
+  }
+
+  /* ── Navbar ── */
+  .nav {
+    background: var(--nav-bg);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.3px;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo-icon {
+    width: 28px; height: 28px;
+    background: rgba(96,165,250,0.2);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .nav-tabs { display: flex; gap: 2px; flex: 1; }
+  .nav-tab {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-family: var(--font);
+    border: none;
+    background: transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .nav-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
+  .nav-tab.active { color: #fff; background: rgba(96,165,250,0.18); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .nav-role { font-size: 12px; color: rgba(255,255,255,0.35); }
+  .nav-badge {
+    background: rgba(220,38,38,0.85);
+    color: #fff; font-size: 10px;
+    padding: 2px 8px; border-radius: 10px;
+    font-weight: 500;
+  }
+  .nav-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(96,165,250,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: #93c5fd;
+  }
+
+  /* ── Body grid ── */
+  .main { display: grid; grid-template-columns: 210px 1fr; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--sidebar-bg);
+    padding: 12px 8px;
+    display: flex; flex-direction: column; gap: 2px;
+    min-height: 820px;
+  }
+  .sidebar-section {
+    font-size: 10px; color: rgba(255,255,255,0.28);
+    letter-spacing: 0.09em; padding: 14px 8px 4px;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 10px; border-radius: var(--radius-sm);
+    font-size: 13px; color: rgba(255,255,255,0.48);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .sidebar-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
+  .sidebar-item.active { color: #fff; background: rgba(96,165,250,0.2); }
+  .sidebar-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0; opacity: 0.6;
+  }
+  .sidebar-badge {
+    margin-left: auto;
+    background: rgba(220,38,38,0.8);
+    color: #fff; font-size: 9px;
+    padding: 1px 6px; border-radius: 8px;
+  }
+  .sidebar-bottom { margin-top: auto; padding-top: 8px; }
+
+  /* ── Content area ── */
+  .content {
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    overflow-y: auto;
+  }
+
+  /* ── Stat row ── */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .stat-label { font-size: 11px; color: var(--ink3); margin-bottom: 5px; font-weight: 400; }
+  .stat-value { font-size: 21px; font-weight: 600; color: var(--ink); letter-spacing: -0.5px; }
+  .stat-sub { font-size: 11px; margin-top: 3px; }
+  .stat-up { color: var(--green); }
+  .stat-down { color: var(--red); }
+
+  /* ── Invoice panel ── */
+  .invoice-area {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+  }
+  .invoice-header {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 14px;
+  }
+  .invoice-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .inclusive-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #ede9fe; border: 0.5px solid #c4b5fd;
+    color: #6d28d9; font-size: 10px; font-weight: 500;
+    padding: 3px 9px; border-radius: 12px;
+  }
+
+  .toggle-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .toggle-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px;
+    cursor: pointer; border: 0.5px solid var(--border2);
+    font-family: var(--font); font-weight: 500;
+    background: var(--surface2); color: var(--ink3);
+    transition: all 0.15s;
+  }
+  .toggle-btn.cash { background: #dcfce7; border-color: #86efac; color: #15803d; }
+  .toggle-btn.credit { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+
+  .invoice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+
+  .form-group { margin-bottom: 11px; }
+  .form-label { font-size: 11px; color: var(--ink3); margin-bottom: 4px; display: block; font-weight: 500; }
+  .form-input, .form-select {
+    width: 100%; height: 34px;
+    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    padding: 0 10px; font-size: 13px; color: var(--ink);
+    background: var(--surface2); font-family: var(--font);
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+
+  .credit-alert {
+    background: #fef9c3; border: 0.5px solid #fde68a;
+    border-radius: var(--radius-sm); padding: 7px 11px;
+    font-size: 11px; color: #92400e; margin-bottom: 11px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ── Items table ── */
+  .items-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 14px; }
+  .items-table th {
+    background: var(--surface2); padding: 7px 9px;
+    text-align: left; font-size: 11px; color: var(--ink3);
+    font-weight: 500; border-bottom: 0.5px solid var(--border2);
+  }
+  .items-table td {
+    padding: 8px 9px; border-bottom: 0.5px solid var(--border);
+    color: var(--ink); vertical-align: middle;
+  }
+  .items-table tbody tr:last-child td { border-bottom: none; }
+  .items-table tbody tr:hover td { background: var(--surface2); }
+  .badge-vat {
+    font-size: 9px; padding: 2px 6px; border-radius: 8px;
+    background: #dbeafe; color: #1d4ed8; margin-left: 4px;
+    font-weight: 500;
+  }
+  .badge-novat {
+    font-size: 9px; padding: 2px 6px; border-radius: 8px;
+    background: #f3f4f6; color: #6b7280; margin-left: 4px;
+    font-weight: 500;
+  }
+
+  /* ── VAT breakdown + totals row ── */
+  .bottom-row { display: grid; grid-template-columns: 1fr 290px; gap: 14px; align-items: start; }
+
+  .vat-box {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+    border: 0.5px solid #bfdbfe; border-radius: var(--radius-md); padding: 14px;
+  }
+  .vat-box-title {
+    font-size: 11px; font-weight: 600; color: #1e40af;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .vat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .vat-cell {
+    background: #fff; border-radius: var(--radius-sm);
+    padding: 9px 11px; border: 0.5px solid #dbeafe;
+  }
+  .vat-cell-label { font-size: 10px; color: #6b7280; margin-bottom: 3px; }
+  .vat-cell-value { font-size: 15px; font-weight: 600; color: #1e40af; }
+  .vat-cell-note { font-size: 9px; color: #93c5fd; margin-top: 2px; }
+
+  .invoice-totals {
+    background: var(--surface2); border-radius: var(--radius-sm);
+    padding: 12px 14px; border: 0.5px solid var(--border);
+  }
+  .total-row {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink2); padding: 3px 0;
+  }
+  .total-row.final {
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    padding-top: 8px; border-top: 0.5px solid var(--border2); margin-top: 5px;
+  }
+  .total-row.vat-line { color: var(--teal); }
+  .vat-note {
+    font-size: 10px; color: var(--ink3); margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .btn {
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: var(--font); border: none; transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-outline { background: transparent; border: 0.5px solid var(--border2); color: var(--ink2); }
+  .btn-outline:hover { background: var(--surface2); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-green { background: var(--green); color: #fff; }
+
+  /* ── Bottom panels ── */
+  .panel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .panel {
+    background: var(--surface); border: 0.5px solid var(--border2);
+    border-radius: var(--radius-md); padding: 16px;
+  }
+  .panel-title {
+    font-size: 12px; font-weight: 600; color: var(--ink2);
+    margin-bottom: 13px; display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .panel-action { font-size: 11px; color: var(--accent); cursor: pointer; font-weight: 400; }
+
+  /* ── Aging buckets ── */
+  .aging-row { display: flex; gap: 5px; margin-bottom: 12px; }
+  .aging-seg {
+    flex: 1; text-align: center; padding: 5px 4px; border-radius: var(--radius-sm);
+    font-size: 11px;
+  }
+  .aging-label { font-size: 9px; display: block; margin-bottom: 2px; opacity: 0.7; }
+  .aging-val { font-size: 13px; font-weight: 600; }
+  .a0 { background: #dcfce7; color: #15803d; }
+  .a7 { background: #fef3c7; color: #92400e; }
+  .a15 { background: #fee2e2; color: #991b1b; }
+  .a30 { background: #fecaca; color: #7f1d1d; }
+
+  /* ── Customer rows ── */
+  .cust-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .cust-row:last-of-type { border-bottom: none; }
+  .cust-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; flex-shrink: 0;
+  }
+  .cust-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+  .cust-due { font-size: 12px; margin-left: auto; font-weight: 600; }
+  .cust-days { font-size: 10px; color: var(--ink3); text-align: right; }
+  .risk {
+    font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 500;
+  }
+  .risk-high { background: #fee2e2; color: #dc2626; }
+  .risk-med  { background: #fef3c7; color: #d97706; }
+  .risk-low  { background: #dcfce7; color: #16a34a; }
+
+  /* ── Credit bars ── */
+  .credit-bars { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .bar-wrap {}
+  .bar-label-row {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink3); margin-bottom: 4px;
+  }
+  .bar-track {
+    height: 6px; background: var(--surface2); border-radius: 3px;
+    overflow: hidden; border: 0.5px solid var(--border);
+  }
+  .bar-fill { height: 100%; border-radius: 3px; }
+
+  /* ── Daily summary ── */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 13px; }
+  .summary-cell {
+    background: var(--surface2); border-radius: var(--radius-sm);
+    padding: 9px 11px;
+  }
+  .summary-cell-label { font-size: 10px; color: var(--ink3); margin-bottom: 3px; }
+  .summary-cell-value { font-size: 16px; font-weight: 600; }
+
+  .top-products { margin-bottom: 13px; }
+  .top-products-title { font-size: 11px; font-weight: 600; color: var(--ink2); margin-bottom: 7px; }
+  .product-row {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink3); padding: 3px 0;
+  }
+  .product-row span:last-child { color: var(--ink); font-weight: 500; }
+
+  .export-row { display: flex; gap: 7px; padding-top: 11px; border-top: 0.5px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Navbar ── -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🏪</div>
+      थोक बजार
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active">Dashboard</button>
+      <button class="nav-tab">New Sale</button>
+      <button class="nav-tab">Credit Ledger</button>
+      <button class="nav-tab">Inventory</button>
+      <button class="nav-tab">Reports</button>
+      <button class="nav-tab">VAT</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-role">Admin</span>
+      <span class="nav-badge">3 overdue</span>
+      <div class="nav-avatar">RB</div>
+    </div>
+  </nav>
+
+  <!-- ── Body ── -->
+  <div class="main">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Sales</div>
+      <div class="sidebar-item active"><div class="sidebar-dot"></div> Dashboard</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> New Invoice</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Quick Repeat</div>
+
+      <div class="sidebar-section">Credit</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Customers <span class="sidebar-badge">3</span></div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Overdue</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Payments</div>
+
+      <div class="sidebar-section">Stock</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Products</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Low Stock <span class="sidebar-badge">5</span></div>
+
+      <div class="sidebar-section">Finance</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> VAT Report</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Profit</div>
+      <div class="sidebar-item"><div class="sidebar-dot"></div> Expenses</div>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-item"><div class="sidebar-dot"></div> Settings</div>
+      </div>
+    </aside>
+
+    <!-- ── Main content ── -->
+    <div class="content">
+
+      <!-- Stat row -->
+      <div class="stat-row">
+        <div class="stat">
+          <div class="stat-label">Today's Sales</div>
+          <div class="stat-value">रू 1,24,500</div>
+          <div class="stat-sub stat-up">↑ 12% vs yesterday</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Total Receivables</div>
+          <div class="stat-value">रू 8,32,000</div>
+          <div class="stat-sub stat-down">⏱ 3 overdue accounts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Output VAT (this month)</div>
+          <div class="stat-value">रू 14,209</div>
+          <div class="stat-sub" style="color:var(--teal)">13% inclusive</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Net Profit (month)</div>
+          <div class="stat-value">रू 41,800</div>
+          <div class="stat-sub stat-up">↑ 8% vs last month</div>
+        </div>
+      </div>
+
+      <!-- Invoice panel -->
+      <div class="invoice-area">
+        <div class="invoice-header">
+          <span class="invoice-title">New Sale — Invoice #INV-2025-0482</span>
+          <span class="inclusive-badge">% VAT 13% inclusive</span>
+        </div>
+
+        <div class="toggle-row">
+          <button class="toggle-btn cash">💵 Cash Sale</button>
+          <button class="toggle-btn">💳 Credit Sale</button>
+        </div>
+
+        <div class="invoice-grid">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Customer</label>
+              <select class="form-select">
+                <option>Sharma Traders, Ason</option>
+                <option>Ram Bahadur &amp; Sons</option>
+                <option>Meena Kapada Ghar</option>
+              </select>
+            </div>
+            <div class="credit-alert">
+              ⚠ Credit limit: रू 2,00,000 &nbsp;|&nbsp; Used: रू 1,45,000 &nbsp;|&nbsp; Available: <strong>&nbsp;रू 55,000</strong>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search product (name or SKU)</label>
+              <input class="form-input" type="text" placeholder="e.g. Dhaka cloth, SKU-0041…" />
+            </div>
+          </div>
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="form-group">
+                <label class="form-label">Sale date</label>
+                <input class="form-input" type="date" value="2025-07-14" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Due date (credit)</label>
+                <input class="form-input" type="date" value="2025-07-29" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment ref / note</label>
+              <input class="form-input" type="text" placeholder="Cheque no. / narration…" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Items table -->
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th style="width:28%">Product</th>
+              <th>SKU</th>
+              <th>Qty</th>
+              <th>Rate (incl. VAT)</th>
+              <th>Base price</th>
+              <th>VAT (13%)</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dhaka Fabric Roll <span class="badge-vat">VAT</span></td>
+              <td style="color:var(--ink3);font-family:var(--mono)">DH-0041</td>
+              <td>10</td>
+              <td>रू 1,130</td>
+              <td style="color:var(--ink3)">रू 1,000</td>
+              <td style="color:var(--teal)">रू 130</td>
+              <td style="font-weight:600">रू 11,300</td>
+            </tr>
+            <tr>
+              <td>Pashmina Shawl <span class="badge-vat">VAT</span></td>
+              <td style="color:var(--ink3);font-family:var(--mono)">PS-0018</td>
+              <td>5</td>
+              <td>रू 2,260</td>
+              <td style="color:var(--ink3)">रू 2,000</td>
+              <td style="color:var(--teal)">रू 260</td>
+              <td style="font-weight:600">रू 11,300</td>
+            </tr>
+            <tr>
+              <td>Cotton Thread <span class="badge-novat">No VAT</span></td>
+              <td style="color:var(--ink3);font-family:var(--mono)">CT-0099</td>
+              <td>20</td>
+              <td>रू 250</td>
+              <td style="color:var(--ink3)">रू 250</td>
+              <td style="color:var(--ink3)">—</td>
+              <td style="font-weight:600">रू 5,000</td>
+            </tr>
+            <tr style="background:#f9fafb">
+              <td colspan="7" style="text-align:right;padding:7px 9px;">
+                <button class="btn btn-outline" style="font-size:11px;padding:4px 10px;">+ Add item</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- VAT breakdown + totals -->
+        <div class="bottom-row">
+          <div class="vat-box">
+            <div class="vat-box-title">🧮 VAT breakdown — inclusive method (Nepal IRD)</div>
+            <div class="vat-grid">
+              <div class="vat-cell">
+                <div class="vat-cell-label">Gross amount (VAT items)</div>
+                <div class="vat-cell-value">रू 22,600</div>
+                <div class="vat-cell-note">Inclusive of 13% VAT</div>
+              </div>
+              <div class="vat-cell">
+                <div class="vat-cell-label">Base price (excl. VAT)</div>
+                <div class="vat-cell-value">रू 20,000</div>
+                <div class="vat-cell-note">÷ 1.13</div>
+              </div>
+              <div class="vat-cell">
+                <div class="vat-cell-label">VAT amount</div>
+                <div class="vat-cell-value" style="color:#16a34a">रू 2,600</div>
+                <div class="vat-cell-note">Output VAT payable</div>
+              </div>
+              <div class="vat-cell">
+                <div class="vat-cell-label">Non-VAT items</div>
+                <div class="vat-cell-value" style="color:#6b7280">रू 5,000</div>
+                <div class="vat-cell-note">Exempt from VAT</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-totals">
+            <div class="total-row"><span>Subtotal (excl. VAT)</span><span>रू 25,000</span></div>
+            <div class="total-row vat-line"><span>VAT @ 13% (inclusive)</span><span>रू 2,600</span></div>
+            <div class="total-row"><span>Non-VAT items</span><span>रू 5,000</span></div>
+            <div class="total-row final"><span>Grand Total</span><span>रू 27,600</span></div>
+            <div class="vat-note">VAT already included in price — no extra charge to customer.<br>Formula: VAT = Total × 13 ÷ 113</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-outline">💾 Save draft</button>
+          <button class="btn btn-outline">💬 Send on WhatsApp</button>
+          <button class="btn btn-green">✓ Confirm &amp; Print</button>
+        </div>
+      </div>
+
+      <!-- Bottom panels -->
+      <div class="panel-row">
+
+        <!-- Credit overview -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>👥 Credit overview</span>
+            <span class="panel-action">View all →</span>
+          </div>
+
+          <div class="aging-row">
+            <div class="aging-seg a0"><span class="aging-label">Current</span><span class="aging-val">रू 2.1L</span></div>
+            <div class="aging-seg a7"><span class="aging-label">7 days</span><span class="aging-val">रू 1.4L</span></div>
+            <div class="aging-seg a15"><span class="aging-label">15 days</span><span class="aging-val">रू 3.2L</span></div>
+            <div class="aging-seg a30"><span class="aging-label">30+ days</span><span class="aging-val">रू 1.6L</span></div>
+          </div>
+
+          <div class="cust-row">
+            <div class="cust-avatar" style="background:#dbeafe;color:#1d4ed8">ST</div>
+            <div>
+              <div class="cust-name">Sharma Traders</div>
+              <span class="risk risk-med">medium risk</span>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="cust-due" style="color:var(--amber)">रू 1,45,000</div>
+              <div class="cust-days">Due in 6 days</div>
+            </div>
+          </div>
+          <div class="cust-row">
+            <div class="cust-avatar" style="background:#fee2e2;color:#dc2626">RB</div>
+            <div>
+              <div class="cust-name">Ram Bahadur &amp; Sons</div>
+              <span class="risk risk-high">high risk</span>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="cust-due" style="color:var(--red)">रू 2,32,000</div>
+              <div class="cust-days">Overdue 12 days</div>
+            </div>
+          </div>
+          <div class="cust-row">
+            <div class="cust-avatar" style="background:#dcfce7;color:#15803d">MK</div>
+            <div>
+              <div class="cust-name">Meena Kapada Ghar</div>
+              <span class="risk risk-low">low risk</span>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="cust-due" style="color:var(--green)">रू 48,500</div>
+              <div class="cust-days">Due in 18 days</div>
+            </div>
+          </div>
+
+          <div class="credit-bars">
+            <div class="bar-wrap">
+              <div class="bar-label-row">
+                <span>Ram Bahadur limit usage</span>
+                <span style="color:var(--red);font-weight:600">93%</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:93%;background:var(--red)"></div>
+              </div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar-label-row">
+                <span>Sharma Traders limit usage</span>
+                <span style="color:var(--amber);font-weight:600">72%</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:72%;background:var(--amber)"></div>
+              </div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar-label-row">
+                <span>Meena Kapada Ghar limit usage</span>
+                <span style="color:var(--green);font-weight:600">24%</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:24%;background:var(--green)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily summary -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>📊 Daily summary</span>
+            <span class="panel-action">Full report →</span>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-cell">
+              <div class="summary-cell-label">Cash sales</div>
+              <div class="summary-cell-value" style="color:var(--green)">रू 72,000</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">Credit sales</div>
+              <div class="summary-cell-value" style="color:var(--accent)">रू 52,500</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">Payments received</div>
+              <div class="summary-cell-value" style="color:var(--ink)">रू 38,000</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">Output VAT collected</div>
+              <div class="summary-cell-value" style="color:var(--teal)">रू 14,209</div>
+            </div>
+          </div>
+
+          <div class="top-products">
+            <div class="top-products-title">Top products today</div>
+            <div class="product-row"><span>Dhaka Fabric Roll</span><span>रू 32,000</span></div>
+            <div class="product-row"><span>Pashmina Shawl</span><span>रू 24,000</span></div>
+            <div class="product-row"><span>Cotton Thread</span><span>रू 18,000</span></div>
+            <div class="product-row"><span>Carpet (5×8 ft)</span><span>रू 14,500</span></div>
+          </div>
+
+          <div class="export-row">
+            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">📄 Export PDF</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">📊 Export Excel</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">💬 Share</button>
+          </div>
+        </div>
+
+      </div><!-- end panel-row -->
+
+    </div><!-- end content -->
+  </div><!-- end main -->
+</div><!-- end app -->
+
+</body>
+</html>
