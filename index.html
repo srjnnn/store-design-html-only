@@ -4,725 +4,1150 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>थोक बजार — Wholesale Retail System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+  --surface:#fff;--surface2:#f5f5fa;--surface3:#eeeef8;
+  --accent:#2563eb;--accent2:#1d4ed8;
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;--teal:#0891b2;--purple:#7c3aed;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);
+  --nav:#1a1a2e;--sidebar:#111827;
+  --r-sm:6px;--r-md:8px;--r-lg:12px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{font-family:var(--font);background:#e2e2ee;min-height:100vh;color:var(--ink)}
+.app{display:grid;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
 
-  :root {
-    --ink:       #1a1a2e;
-    --ink2:      #4a4a6a;
-    --ink3:      #8888aa;
-    --surface:   #ffffff;
-    --surface2:  #f5f5fa;
-    --surface3:  #eeeef8;
-    --accent:    #2563eb;
-    --accent2:   #1d4ed8;
-    --green:     #16a34a;
-    --red:       #dc2626;
-    --amber:     #d97706;
-    --teal:      #0891b2;
-    --border:    rgba(0,0,0,0.08);
-    --border2:   rgba(0,0,0,0.13);
-    --nav-bg:    #1a1a2e;
-    --sidebar-bg:#111827;
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --font:      'DM Sans', system-ui, sans-serif;
-    --mono:      'JetBrains Mono', monospace;
-  }
+/* NAV */
+.nav{background:var(--nav);display:flex;align-items:center;padding:0 18px;gap:0;border-bottom:1px solid rgba(255,255,255,0.05);z-index:100}
+.nav-logo{font-size:15px;font-weight:600;color:#fff;margin-right:20px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.logo-box{width:28px;height:28px;background:rgba(96,165,250,0.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-tabs{display:flex;gap:2px;flex:1;overflow-x:auto}
+.nav-tab{padding:7px 13px;border-radius:var(--r-sm);font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--font);border:none;background:transparent;white-space:nowrap;transition:all 0.15s}
+.nav-tab:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.07)}
+.nav-tab.active{color:#fff;background:rgba(96,165,250,0.2)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-badge{background:rgba(220,38,38,0.85);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;cursor:pointer}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:rgba(96,165,250,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#93c5fd}
 
-  html, body {
-    font-family: var(--font);
-    background: #e8e8f0;
-    min-height: 100vh;
-    padding: 32px;
-    color: var(--ink);
-  }
+/* BODY */
+.body{display:grid;grid-template-columns:200px 1fr;height:calc(100vh - 56px);overflow:hidden}
 
-  /* ── Layout ── */
-  .app {
-    width: 1280px;
-    margin: 0 auto;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--border2);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
-    background: var(--surface2);
-    display: grid;
-    grid-template-rows: 56px 1fr;
-  }
+/* SIDEBAR */
+.sidebar{background:var(--sidebar);padding:10px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sb-sec{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:0.09em;padding:12px 8px 4px;text-transform:uppercase;font-weight:500}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r-sm);font-size:13px;color:rgba(255,255,255,0.48);cursor:pointer;transition:all 0.15s;border:none;background:transparent;width:100%;font-family:var(--font);text-align:left}
+.sb-item:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.06)}
+.sb-item.active{color:#fff;background:rgba(96,165,250,0.2)}
+.sb-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.6;flex-shrink:0}
+.sb-badge{margin-left:auto;background:rgba(220,38,38,0.8);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px}
+.sb-bottom{margin-top:auto;padding-top:8px;border-top:0.5px solid rgba(255,255,255,0.07)}
 
-  /* ── Navbar ── */
-  .nav {
-    background: var(--nav-bg);
-    display: flex;
-    align-items: center;
-    gap: 0;
-    padding: 0 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .nav-logo {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: -0.3px;
-    margin-right: 24px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .nav-logo-icon {
-    width: 28px; height: 28px;
-    background: rgba(96,165,250,0.2);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .nav-tabs { display: flex; gap: 2px; flex: 1; }
-  .nav-tab {
-    padding: 7px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    cursor: pointer;
-    font-family: var(--font);
-    border: none;
-    background: transparent;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
-  .nav-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
-  .nav-tab.active { color: #fff; background: rgba(96,165,250,0.18); }
-  .nav-right { display: flex; align-items: center; gap: 10px; }
-  .nav-role { font-size: 12px; color: rgba(255,255,255,0.35); }
-  .nav-badge {
-    background: rgba(220,38,38,0.85);
-    color: #fff; font-size: 10px;
-    padding: 2px 8px; border-radius: 10px;
-    font-weight: 500;
-  }
-  .nav-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(96,165,250,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 600; color: #93c5fd;
-  }
+/* CONTENT */
+.content{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.page{display:none;flex-direction:column;gap:14px}
+.page.active{display:flex}
 
-  /* ── Body grid ── */
-  .main { display: grid; grid-template-columns: 210px 1fr; }
+/* CARDS/PANELS */
+.panel{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:16px}
+.panel-title{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.panel-action{font-size:11px;color:var(--accent);cursor:pointer;font-weight:400}
 
-  /* ── Sidebar ── */
-  .sidebar {
-    background: var(--sidebar-bg);
-    padding: 12px 8px;
-    display: flex; flex-direction: column; gap: 2px;
-    min-height: 820px;
-  }
-  .sidebar-section {
-    font-size: 10px; color: rgba(255,255,255,0.28);
-    letter-spacing: 0.09em; padding: 14px 8px 4px;
-    text-transform: uppercase; font-weight: 500;
-  }
-  .sidebar-item {
-    display: flex; align-items: center; gap: 9px;
-    padding: 7px 10px; border-radius: var(--radius-sm);
-    font-size: 13px; color: rgba(255,255,255,0.48);
-    cursor: pointer; transition: all 0.15s;
-  }
-  .sidebar-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
-  .sidebar-item.active { color: #fff; background: rgba(96,165,250,0.2); }
-  .sidebar-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: currentColor; flex-shrink: 0; opacity: 0.6;
-  }
-  .sidebar-badge {
-    margin-left: auto;
-    background: rgba(220,38,38,0.8);
-    color: #fff; font-size: 9px;
-    padding: 1px 6px; border-radius: 8px;
-  }
-  .sidebar-bottom { margin-top: auto; padding-top: 8px; }
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:13px 15px}
+.stat-label{font-size:11px;color:var(--ink3);margin-bottom:4px}
+.stat-value{font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-0.5px}
+.stat-sub{font-size:11px;margin-top:3px}
+.up{color:var(--green)}.dn{color:var(--red)}.tl{color:var(--teal)}
 
-  /* ── Content area ── */
-  .content {
-    padding: 20px;
-    display: flex; flex-direction: column; gap: 16px;
-    overflow-y: auto;
-  }
+/* GRID HELPERS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-  /* ── Stat row ── */
-  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .stat {
-    background: var(--surface);
-    border: 0.5px solid var(--border2);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-  }
-  .stat-label { font-size: 11px; color: var(--ink3); margin-bottom: 5px; font-weight: 400; }
-  .stat-value { font-size: 21px; font-weight: 600; color: var(--ink); letter-spacing: -0.5px; }
-  .stat-sub { font-size: 11px; margin-top: 3px; }
-  .stat-up { color: var(--green); }
-  .stat-down { color: var(--red); }
+/* FORMS */
+.form-group{margin-bottom:10px}
+.form-label{font-size:11px;color:var(--ink3);margin-bottom:4px;display:block;font-weight:500}
+.form-input,.form-select{width:100%;height:34px;border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:0 10px;font-size:13px;color:var(--ink);background:var(--surface2);font-family:var(--font);outline:none;transition:border 0.15s}
+.form-input:focus,.form-select:focus{border-color:var(--accent);background:var(--surface)}
+textarea.form-input{height:auto;padding:8px 10px;resize:vertical}
 
-  /* ── Invoice panel ── */
-  .invoice-area {
-    background: var(--surface);
-    border: 0.5px solid var(--border2);
-    border-radius: var(--radius-md);
-    padding: 16px 18px;
-  }
-  .invoice-header {
-    display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 14px;
-  }
-  .invoice-title { font-size: 13px; font-weight: 600; color: var(--ink); }
-  .inclusive-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #ede9fe; border: 0.5px solid #c4b5fd;
-    color: #6d28d9; font-size: 10px; font-weight: 500;
-    padding: 3px 9px; border-radius: 12px;
-  }
+/* TOGGLE */
+.toggle-row{display:flex;gap:6px;margin-bottom:12px}
+.toggle-btn{padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:0.5px solid var(--border2);font-family:var(--font);font-weight:500;background:var(--surface2);color:var(--ink3);transition:all 0.15s}
+.toggle-btn.t-cash{background:#dcfce7;border-color:#86efac;color:#15803d}
+.toggle-btn.t-credit{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
 
-  .toggle-row { display: flex; gap: 6px; margin-bottom: 14px; }
-  .toggle-btn {
-    padding: 6px 14px; border-radius: 20px; font-size: 12px;
-    cursor: pointer; border: 0.5px solid var(--border2);
-    font-family: var(--font); font-weight: 500;
-    background: var(--surface2); color: var(--ink3);
-    transition: all 0.15s;
-  }
-  .toggle-btn.cash { background: #dcfce7; border-color: #86efac; color: #15803d; }
-  .toggle-btn.credit { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:var(--surface2);padding:7px 9px;text-align:left;font-size:11px;color:var(--ink3);font-weight:500;border-bottom:0.5px solid var(--border2)}
+.tbl td{padding:7px 9px;border-bottom:0.5px solid var(--border);color:var(--ink);vertical-align:middle}
+.tbl tbody tr:hover td{background:#fafafa}
+.tbl tbody tr:last-child td{border-bottom:none}
 
-  .invoice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+/* BADGES */
+.badge{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500;display:inline-block}
+.b-vat{background:#dbeafe;color:#1d4ed8}
+.b-novat{background:#f3f4f6;color:#6b7280}
+.b-cash{background:#dcfce7;color:#15803d}
+.b-credit{background:#dbeafe;color:#1d4ed8}
+.b-paid{background:#dcfce7;color:#15803d}
+.b-partial{background:#fef3c7;color:#d97706}
+.b-due{background:#fee2e2;color:#dc2626}
+.b-overdue{background:#fecaca;color:#7f1d1d}
+.risk-h{background:#fee2e2;color:#dc2626;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500}
+.risk-m{background:#fef3c7;color:#d97706;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500}
+.risk-l{background:#dcfce7;color:#16a34a;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500}
 
-  .form-group { margin-bottom: 11px; }
-  .form-label { font-size: 11px; color: var(--ink3); margin-bottom: 4px; display: block; font-weight: 500; }
-  .form-input, .form-select {
-    width: 100%; height: 34px;
-    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
-    padding: 0 10px; font-size: 13px; color: var(--ink);
-    background: var(--surface2); font-family: var(--font);
-    outline: none;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+/* BTNS */
+.btn{padding:7px 14px;border-radius:var(--r-sm);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font);border:0.5px solid var(--border2);background:var(--surface2);color:var(--ink2);transition:all 0.15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--surface3)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent2)}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:#15803d}
+.btn-red{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 
-  .credit-alert {
-    background: #fef9c3; border: 0.5px solid #fde68a;
-    border-radius: var(--radius-sm); padding: 7px 11px;
-    font-size: 11px; color: #92400e; margin-bottom: 11px;
-    display: flex; align-items: center; gap: 6px;
-  }
+/* INVOICE SPECIFIC */
+.inc-badge{display:inline-flex;align-items:center;gap:5px;background:#ede9fe;border:0.5px solid #c4b5fd;color:#6d28d9;font-size:10px;font-weight:500;padding:3px 9px;border-radius:12px}
+.vat-box{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:0.5px solid #bfdbfe;border-radius:var(--r-md);padding:13px}
+.vat-box-title{font-size:11px;font-weight:600;color:#1e40af;margin-bottom:9px}
+.vat-cell{background:#fff;border-radius:var(--r-sm);padding:9px 11px;border:0.5px solid #dbeafe}
+.vat-cell-label{font-size:10px;color:#6b7280;margin-bottom:3px}
+.vat-cell-value{font-size:15px;font-weight:600;color:#1e40af}
+.vat-cell-note{font-size:9px;color:#93c5fd;margin-top:2px}
+.totals-box{background:var(--surface2);border-radius:var(--r-sm);padding:12px 14px;border:0.5px solid var(--border)}
+.total-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);padding:3px 0}
+.total-final{font-size:15px;font-weight:600;color:var(--ink);padding-top:8px;border-top:0.5px solid var(--border2);margin-top:5px;display:flex;justify-content:space-between}
+.vat-note{font-size:10px;color:var(--ink3);margin-top:6px;line-height:1.5}
+.credit-alert{background:#fef9c3;border:0.5px solid #fde68a;border-radius:var(--r-sm);padding:7px 11px;font-size:11px;color:#92400e;margin-bottom:10px}
 
-  /* ── Items table ── */
-  .items-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 14px; }
-  .items-table th {
-    background: var(--surface2); padding: 7px 9px;
-    text-align: left; font-size: 11px; color: var(--ink3);
-    font-weight: 500; border-bottom: 0.5px solid var(--border2);
-  }
-  .items-table td {
-    padding: 8px 9px; border-bottom: 0.5px solid var(--border);
-    color: var(--ink); vertical-align: middle;
-  }
-  .items-table tbody tr:last-child td { border-bottom: none; }
-  .items-table tbody tr:hover td { background: var(--surface2); }
-  .badge-vat {
-    font-size: 9px; padding: 2px 6px; border-radius: 8px;
-    background: #dbeafe; color: #1d4ed8; margin-left: 4px;
-    font-weight: 500;
-  }
-  .badge-novat {
-    font-size: 9px; padding: 2px 6px; border-radius: 8px;
-    background: #f3f4f6; color: #6b7280; margin-left: 4px;
-    font-weight: 500;
-  }
+/* CREDIT BARS */
+.bar-wrap{margin-bottom:8px}
+.bar-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-bottom:3px}
+.bar-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;border:0.5px solid var(--border)}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.4s}
 
-  /* ── VAT breakdown + totals row ── */
-  .bottom-row { display: grid; grid-template-columns: 1fr 290px; gap: 14px; align-items: start; }
+/* AGING */
+.aging-row{display:flex;gap:5px;margin-bottom:12px}
+.age-seg{flex:1;text-align:center;padding:5px 4px;border-radius:var(--r-sm);font-size:11px}
+.age-label{font-size:9px;display:block;margin-bottom:2px;opacity:0.7}
+.age-val{font-size:13px;font-weight:600}
+.a0{background:#dcfce7;color:#15803d}.a7{background:#fef3c7;color:#92400e}
+.a15{background:#fee2e2;color:#991b1b}.a30{background:#fecaca;color:#7f1d1d}
 
-  .vat-box {
-    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-    border: 0.5px solid #bfdbfe; border-radius: var(--radius-md); padding: 14px;
-  }
-  .vat-box-title {
-    font-size: 11px; font-weight: 600; color: #1e40af;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-  }
-  .vat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .vat-cell {
-    background: #fff; border-radius: var(--radius-sm);
-    padding: 9px 11px; border: 0.5px solid #dbeafe;
-  }
-  .vat-cell-label { font-size: 10px; color: #6b7280; margin-bottom: 3px; }
-  .vat-cell-value { font-size: 15px; font-weight: 600; color: #1e40af; }
-  .vat-cell-note { font-size: 9px; color: #93c5fd; margin-top: 2px; }
+/* CUSTOMER ROW */
+.cust-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.cust-row:last-child{border-bottom:none}
+.cust-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
 
-  .invoice-totals {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 12px 14px; border: 0.5px solid var(--border);
-  }
-  .total-row {
-    display: flex; justify-content: space-between;
-    font-size: 12px; color: var(--ink2); padding: 3px 0;
-  }
-  .total-row.final {
-    font-size: 15px; font-weight: 600; color: var(--ink);
-    padding-top: 8px; border-top: 0.5px solid var(--border2); margin-top: 5px;
-  }
-  .total-row.vat-line { color: var(--teal); }
-  .vat-note {
-    font-size: 10px; color: var(--ink3); margin-top: 6px;
-    line-height: 1.5;
-  }
+/* INVENTORY STOCK */
+.stock-chip{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.s-ok{background:#dcfce7;color:#15803d}
+.s-low{background:#fef3c7;color:#d97706}
+.s-out{background:#fee2e2;color:#dc2626}
 
-  /* ── Buttons ── */
-  .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
-  .btn {
-    padding: 8px 16px; border-radius: var(--radius-sm);
-    font-size: 12px; font-weight: 500; cursor: pointer;
-    font-family: var(--font); border: none; transition: all 0.15s;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn-outline { background: transparent; border: 0.5px solid var(--border2); color: var(--ink2); }
-  .btn-outline:hover { background: var(--surface2); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-green { background: var(--green); color: #fff; }
+/* MODAL */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--r-lg);padding:22px;width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{cursor:pointer;color:var(--ink3);font-size:18px;background:none;border:none;line-height:1}
 
-  /* ── Bottom panels ── */
-  .panel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .panel {
-    background: var(--surface); border: 0.5px solid var(--border2);
-    border-radius: var(--radius-md); padding: 16px;
-  }
-  .panel-title {
-    font-size: 12px; font-weight: 600; color: var(--ink2);
-    margin-bottom: 13px; display: flex; align-items: center;
-    justify-content: space-between;
-  }
-  .panel-action { font-size: 11px; color: var(--accent); cursor: pointer; font-weight: 400; }
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:10px 18px;border-radius:var(--r-md);font-size:13px;font-weight:500;z-index:300;transform:translateY(80px);opacity:0;transition:all 0.3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
 
-  /* ── Aging buckets ── */
-  .aging-row { display: flex; gap: 5px; margin-bottom: 12px; }
-  .aging-seg {
-    flex: 1; text-align: center; padding: 5px 4px; border-radius: var(--radius-sm);
-    font-size: 11px;
-  }
-  .aging-label { font-size: 9px; display: block; margin-bottom: 2px; opacity: 0.7; }
-  .aging-val { font-size: 13px; font-weight: 600; }
-  .a0 { background: #dcfce7; color: #15803d; }
-  .a7 { background: #fef3c7; color: #92400e; }
-  .a15 { background: #fee2e2; color: #991b1b; }
-  .a30 { background: #fecaca; color: #7f1d1d; }
+/* CHART BAR SIMPLE */
+.mini-chart{display:flex;align-items:flex-end;gap:4px;height:60px}
+.mini-bar{flex:1;background:var(--accent);border-radius:3px 3px 0 0;opacity:0.7;transition:opacity 0.2s;min-width:0}
+.mini-bar:hover{opacity:1}
+.mini-chart-labels{display:flex;gap:4px;margin-top:4px}
+.mini-chart-label{flex:1;font-size:9px;color:var(--ink3);text-align:center;min-width:0}
 
-  /* ── Customer rows ── */
-  .cust-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 0; border-bottom: 0.5px solid var(--border);
-  }
-  .cust-row:last-of-type { border-bottom: none; }
-  .cust-avatar {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 600; flex-shrink: 0;
-  }
-  .cust-name { font-size: 12px; font-weight: 500; color: var(--ink); }
-  .cust-due { font-size: 12px; margin-left: auto; font-weight: 600; }
-  .cust-days { font-size: 10px; color: var(--ink3); text-align: right; }
-  .risk {
-    font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 500;
-  }
-  .risk-high { background: #fee2e2; color: #dc2626; }
-  .risk-med  { background: #fef3c7; color: #d97706; }
-  .risk-low  { background: #dcfce7; color: #16a34a; }
+/* PRINT INVOICE */
+@media print{
+  .nav,.sidebar,.btn-row,.panel-action{display:none!important}
+  .body{grid-template-columns:1fr}
+  .content{padding:0}
+  .page{display:flex!important}
+  .page:not(#pg-sale){display:none!important}
+}
 
-  /* ── Credit bars ── */
-  .credit-bars { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .bar-wrap {}
-  .bar-label-row {
-    display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--ink3); margin-bottom: 4px;
-  }
-  .bar-track {
-    height: 6px; background: var(--surface2); border-radius: 3px;
-    overflow: hidden; border: 0.5px solid var(--border);
-  }
-  .bar-fill { height: 100%; border-radius: 3px; }
+/* SEARCH */
+.search-wrap{position:relative}
+.search-wrap input{padding-left:30px}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--ink3);font-size:14px;pointer-events:none}
+.search-results{position:absolute;top:36px;left:0;right:0;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--r-sm);box-shadow:0 4px 16px rgba(0,0,0,0.1);z-index:50;max-height:180px;overflow-y:auto;display:none}
+.search-results.open{display:block}
+.search-result-item{padding:8px 11px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.search-result-item:hover{background:var(--surface2)}
+.search-result-item span{color:var(--ink3);font-size:11px}
 
-  /* ── Daily summary ── */
-  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 13px; }
-  .summary-cell {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 9px 11px;
-  }
-  .summary-cell-label { font-size: 10px; color: var(--ink3); margin-bottom: 3px; }
-  .summary-cell-value { font-size: 16px; font-weight: 600; }
-
-  .top-products { margin-bottom: 13px; }
-  .top-products-title { font-size: 11px; font-weight: 600; color: var(--ink2); margin-bottom: 7px; }
-  .product-row {
-    display: flex; justify-content: space-between;
-    font-size: 12px; color: var(--ink3); padding: 3px 0;
-  }
-  .product-row span:last-child { color: var(--ink); font-weight: 500; }
-
-  .export-row { display: flex; gap: 7px; padding-top: 11px; border-top: 0.5px solid var(--border); }
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:3px}
 </style>
 </head>
 <body>
-
 <div class="app">
 
-  <!-- ── Navbar ── -->
-  <nav class="nav">
-    <div class="nav-logo">
-      <div class="nav-logo-icon">🏪</div>
-      थोक बजार
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><div class="logo-box">🏪</div> थोक बजार</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('sale',this)">New Sale</button>
+    <button class="nav-tab" onclick="showPage('credit',this)">Credit Ledger</button>
+    <button class="nav-tab" onclick="showPage('inventory',this)">Inventory</button>
+    <button class="nav-tab" onclick="showPage('reports',this)">Reports</button>
+    <button class="nav-tab" onclick="showPage('vat',this)">VAT</button>
+  </div>
+  <div class="nav-right">
+    <span style="font-size:12px;color:rgba(255,255,255,0.35)">Admin · Ram B.</span>
+    <span class="nav-badge" onclick="showPage('credit',document.querySelectorAll('.nav-tab')[2])">3 overdue</span>
+    <div class="nav-avatar">RB</div>
+  </div>
+</nav>
+
+<div class="body">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-sec">Sales</div>
+  <button class="sb-item active" onclick="showPage('dashboard',document.querySelectorAll('.nav-tab')[0]);setSb(this)"><div class="sb-dot"></div> Dashboard</button>
+  <button class="sb-item" onclick="showPage('sale',document.querySelectorAll('.nav-tab')[1]);setSb(this)"><div class="sb-dot"></div> New Invoice</button>
+  <button class="sb-item" onclick="quickRepeat()"><div class="sb-dot"></div> Quick Repeat</button>
+
+  <div class="sb-sec">Credit</div>
+  <button class="sb-item" onclick="showPage('credit',document.querySelectorAll('.nav-tab')[2]);setSb(this)"><div class="sb-dot"></div> Customers <span class="sb-badge">3</span></button>
+  <button class="sb-item" onclick="showPage('credit',document.querySelectorAll('.nav-tab')[2]);setSb(this)"><div class="sb-dot"></div> Overdue</button>
+  <button class="sb-item" onclick="openModal('payment-modal')"><div class="sb-dot"></div> Payments</button>
+
+  <div class="sb-sec">Stock</div>
+  <button class="sb-item" onclick="showPage('inventory',document.querySelectorAll('.nav-tab')[3]);setSb(this)"><div class="sb-dot"></div> Products</button>
+  <button class="sb-item" onclick="showPage('inventory',document.querySelectorAll('.nav-tab')[3]);setSb(this)"><div class="sb-dot"></div> Low Stock <span class="sb-badge">4</span></button>
+
+  <div class="sb-sec">Finance</div>
+  <button class="sb-item" onclick="showPage('vat',document.querySelectorAll('.nav-tab')[5]);setSb(this)"><div class="sb-dot"></div> VAT Report</button>
+  <button class="sb-item" onclick="showPage('reports',document.querySelectorAll('.nav-tab')[4]);setSb(this)"><div class="sb-dot"></div> Profit</button>
+  <button class="sb-item" onclick="showPage('reports',document.querySelectorAll('.nav-tab')[4]);setSb(this)"><div class="sb-dot"></div> Expenses</button>
+
+  <div class="sb-bottom">
+    <button class="sb-item" onclick="openModal('settings-modal')"><div class="sb-dot"></div> Settings</button>
+  </div>
+</aside>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ═══════════════════════════════════════ DASHBOARD ═══ -->
+<div id="pg-dashboard" class="page active">
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-label">Today's Sales</div>
+      <div class="stat-value" id="d-sales">रू 1,24,500</div>
+      <div class="stat-sub up">↑ 12% vs yesterday</div>
     </div>
-    <div class="nav-tabs">
-      <button class="nav-tab active">Dashboard</button>
-      <button class="nav-tab">New Sale</button>
-      <button class="nav-tab">Credit Ledger</button>
-      <button class="nav-tab">Inventory</button>
-      <button class="nav-tab">Reports</button>
-      <button class="nav-tab">VAT</button>
+    <div class="stat">
+      <div class="stat-label">Total Receivables</div>
+      <div class="stat-value">रू 8,32,000</div>
+      <div class="stat-sub dn">⏱ 3 overdue accounts</div>
     </div>
-    <div class="nav-right">
-      <span class="nav-role">Admin</span>
-      <span class="nav-badge">3 overdue</span>
-      <div class="nav-avatar">RB</div>
+    <div class="stat">
+      <div class="stat-label">Output VAT (month)</div>
+      <div class="stat-value">रू 14,209</div>
+      <div class="stat-sub tl">13% inclusive</div>
     </div>
-  </nav>
+    <div class="stat">
+      <div class="stat-label">Net Profit (month)</div>
+      <div class="stat-value">रू 41,800</div>
+      <div class="stat-sub up">↑ 8% vs last month</div>
+    </div>
+  </div>
 
-  <!-- ── Body ── -->
-  <div class="main">
+  <div class="grid-2">
+    <!-- Sales chart -->
+    <div class="panel">
+      <div class="panel-title">Weekly Sales <span class="panel-action" onclick="showPage('reports',document.querySelectorAll('.nav-tab')[4])">Full report →</span></div>
+      <div class="mini-chart" id="dash-chart"></div>
+      <div class="mini-chart-labels" id="dash-labels"></div>
+    </div>
 
-    <!-- ── Sidebar ── -->
-    <aside class="sidebar">
-      <div class="sidebar-section">Sales</div>
-      <div class="sidebar-item active"><div class="sidebar-dot"></div> Dashboard</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> New Invoice</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Quick Repeat</div>
+    <!-- Top products -->
+    <div class="panel">
+      <div class="panel-title">Top Products Today</div>
+      <table class="tbl">
+        <thead><tr><th>Product</th><th>Units</th><th>Revenue</th></tr></thead>
+        <tbody id="top-products-body"></tbody>
+      </table>
+    </div>
+  </div>
 
-      <div class="sidebar-section">Credit</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Customers <span class="sidebar-badge">3</span></div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Overdue</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Payments</div>
-
-      <div class="sidebar-section">Stock</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Products</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Low Stock <span class="sidebar-badge">5</span></div>
-
-      <div class="sidebar-section">Finance</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> VAT Report</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Profit</div>
-      <div class="sidebar-item"><div class="sidebar-dot"></div> Expenses</div>
-
-      <div class="sidebar-bottom">
-        <div class="sidebar-item"><div class="sidebar-dot"></div> Settings</div>
+  <!-- Aging + recent transactions -->
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Credit Aging <span class="panel-action" onclick="showPage('credit',document.querySelectorAll('.nav-tab')[2])">View all →</span></div>
+      <div class="aging-row">
+        <div class="age-seg a0"><span class="age-label">Current</span><span class="age-val">रू 2.1L</span></div>
+        <div class="age-seg a7"><span class="age-label">7 days</span><span class="age-val">रू 1.4L</span></div>
+        <div class="age-seg a15"><span class="age-label">15 days</span><span class="age-val">रू 3.2L</span></div>
+        <div class="age-seg a30"><span class="age-label">30+ days</span><span class="age-val">रू 1.6L</span></div>
       </div>
-    </aside>
+      <div id="dash-cust-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Recent Transactions</div>
+      <table class="tbl">
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Type</th></tr></thead>
+        <tbody id="recent-txn-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-    <!-- ── Main content ── -->
-    <div class="content">
-
-      <!-- Stat row -->
-      <div class="stat-row">
-        <div class="stat">
-          <div class="stat-label">Today's Sales</div>
-          <div class="stat-value">रू 1,24,500</div>
-          <div class="stat-sub stat-up">↑ 12% vs yesterday</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Total Receivables</div>
-          <div class="stat-value">रू 8,32,000</div>
-          <div class="stat-sub stat-down">⏱ 3 overdue accounts</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Output VAT (this month)</div>
-          <div class="stat-value">रू 14,209</div>
-          <div class="stat-sub" style="color:var(--teal)">13% inclusive</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Net Profit (month)</div>
-          <div class="stat-value">रू 41,800</div>
-          <div class="stat-sub stat-up">↑ 8% vs last month</div>
-        </div>
+<!-- ═══════════════════════════════════════ NEW SALE ═══ -->
+<div id="pg-sale" class="page">
+  <div class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <span style="font-size:14px;font-weight:600;color:var(--ink)" id="inv-num">Invoice #INV-2025-0483</span>
+        <div style="font-size:11px;color:var(--ink3);margin-top:2px" id="inv-date"></div>
       </div>
+      <span class="inc-badge">% VAT 13% inclusive</span>
+    </div>
 
-      <!-- Invoice panel -->
-      <div class="invoice-area">
-        <div class="invoice-header">
-          <span class="invoice-title">New Sale — Invoice #INV-2025-0482</span>
-          <span class="inclusive-badge">% VAT 13% inclusive</span>
+    <!-- Sale type toggle -->
+    <div class="toggle-row">
+      <button class="toggle-btn t-cash" id="btn-cash" onclick="setSaleType('cash')">💵 Cash Sale</button>
+      <button class="toggle-btn" id="btn-credit" onclick="setSaleType('credit')">💳 Credit Sale</button>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Customer</label>
+          <select class="form-select" id="sale-customer" onchange="onCustomerChange()">
+            <option value="">— Select customer —</option>
+          </select>
         </div>
-
-        <div class="toggle-row">
-          <button class="toggle-btn cash">💵 Cash Sale</button>
-          <button class="toggle-btn">💳 Credit Sale</button>
-        </div>
-
-        <div class="invoice-grid">
-          <div>
-            <div class="form-group">
-              <label class="form-label">Customer</label>
-              <select class="form-select">
-                <option>Sharma Traders, Ason</option>
-                <option>Ram Bahadur &amp; Sons</option>
-                <option>Meena Kapada Ghar</option>
-              </select>
-            </div>
-            <div class="credit-alert">
-              ⚠ Credit limit: रू 2,00,000 &nbsp;|&nbsp; Used: रू 1,45,000 &nbsp;|&nbsp; Available: <strong>&nbsp;रू 55,000</strong>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Search product (name or SKU)</label>
-              <input class="form-input" type="text" placeholder="e.g. Dhaka cloth, SKU-0041…" />
-            </div>
+        <div id="credit-info-box" style="display:none" class="credit-alert"></div>
+        <div class="form-group">
+          <label class="form-label">Search product (name or SKU)</label>
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" id="prod-search" type="text" placeholder="e.g. Dhaka cloth, SKU-DH…" oninput="searchProducts()" autocomplete="off" />
+            <div class="search-results" id="prod-results"></div>
           </div>
-          <div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div class="form-group">
-                <label class="form-label">Sale date</label>
-                <input class="form-input" type="date" value="2025-07-14" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">Due date (credit)</label>
-                <input class="form-input" type="date" value="2025-07-29" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Payment ref / note</label>
-              <input class="form-input" type="text" placeholder="Cheque no. / narration…" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Items table -->
-        <table class="items-table">
-          <thead>
-            <tr>
-              <th style="width:28%">Product</th>
-              <th>SKU</th>
-              <th>Qty</th>
-              <th>Rate (incl. VAT)</th>
-              <th>Base price</th>
-              <th>VAT (13%)</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Dhaka Fabric Roll <span class="badge-vat">VAT</span></td>
-              <td style="color:var(--ink3);font-family:var(--mono)">DH-0041</td>
-              <td>10</td>
-              <td>रू 1,130</td>
-              <td style="color:var(--ink3)">रू 1,000</td>
-              <td style="color:var(--teal)">रू 130</td>
-              <td style="font-weight:600">रू 11,300</td>
-            </tr>
-            <tr>
-              <td>Pashmina Shawl <span class="badge-vat">VAT</span></td>
-              <td style="color:var(--ink3);font-family:var(--mono)">PS-0018</td>
-              <td>5</td>
-              <td>रू 2,260</td>
-              <td style="color:var(--ink3)">रू 2,000</td>
-              <td style="color:var(--teal)">रू 260</td>
-              <td style="font-weight:600">रू 11,300</td>
-            </tr>
-            <tr>
-              <td>Cotton Thread <span class="badge-novat">No VAT</span></td>
-              <td style="color:var(--ink3);font-family:var(--mono)">CT-0099</td>
-              <td>20</td>
-              <td>रू 250</td>
-              <td style="color:var(--ink3)">रू 250</td>
-              <td style="color:var(--ink3)">—</td>
-              <td style="font-weight:600">रू 5,000</td>
-            </tr>
-            <tr style="background:#f9fafb">
-              <td colspan="7" style="text-align:right;padding:7px 9px;">
-                <button class="btn btn-outline" style="font-size:11px;padding:4px 10px;">+ Add item</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- VAT breakdown + totals -->
-        <div class="bottom-row">
-          <div class="vat-box">
-            <div class="vat-box-title">🧮 VAT breakdown — inclusive method (Nepal IRD)</div>
-            <div class="vat-grid">
-              <div class="vat-cell">
-                <div class="vat-cell-label">Gross amount (VAT items)</div>
-                <div class="vat-cell-value">रू 22,600</div>
-                <div class="vat-cell-note">Inclusive of 13% VAT</div>
-              </div>
-              <div class="vat-cell">
-                <div class="vat-cell-label">Base price (excl. VAT)</div>
-                <div class="vat-cell-value">रू 20,000</div>
-                <div class="vat-cell-note">÷ 1.13</div>
-              </div>
-              <div class="vat-cell">
-                <div class="vat-cell-label">VAT amount</div>
-                <div class="vat-cell-value" style="color:#16a34a">रू 2,600</div>
-                <div class="vat-cell-note">Output VAT payable</div>
-              </div>
-              <div class="vat-cell">
-                <div class="vat-cell-label">Non-VAT items</div>
-                <div class="vat-cell-value" style="color:#6b7280">रू 5,000</div>
-                <div class="vat-cell-note">Exempt from VAT</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="invoice-totals">
-            <div class="total-row"><span>Subtotal (excl. VAT)</span><span>रू 25,000</span></div>
-            <div class="total-row vat-line"><span>VAT @ 13% (inclusive)</span><span>रू 2,600</span></div>
-            <div class="total-row"><span>Non-VAT items</span><span>रू 5,000</span></div>
-            <div class="total-row final"><span>Grand Total</span><span>रू 27,600</span></div>
-            <div class="vat-note">VAT already included in price — no extra charge to customer.<br>Formula: VAT = Total × 13 ÷ 113</div>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline">💾 Save draft</button>
-          <button class="btn btn-outline">💬 Send on WhatsApp</button>
-          <button class="btn btn-green">✓ Confirm &amp; Print</button>
         </div>
       </div>
-
-      <!-- Bottom panels -->
-      <div class="panel-row">
-
-        <!-- Credit overview -->
-        <div class="panel">
-          <div class="panel-title">
-            <span>👥 Credit overview</span>
-            <span class="panel-action">View all →</span>
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group">
+            <label class="form-label">Sale date</label>
+            <input class="form-input" type="date" id="sale-date" />
           </div>
-
-          <div class="aging-row">
-            <div class="aging-seg a0"><span class="aging-label">Current</span><span class="aging-val">रू 2.1L</span></div>
-            <div class="aging-seg a7"><span class="aging-label">7 days</span><span class="aging-val">रू 1.4L</span></div>
-            <div class="aging-seg a15"><span class="aging-label">15 days</span><span class="aging-val">रू 3.2L</span></div>
-            <div class="aging-seg a30"><span class="aging-label">30+ days</span><span class="aging-val">रू 1.6L</span></div>
-          </div>
-
-          <div class="cust-row">
-            <div class="cust-avatar" style="background:#dbeafe;color:#1d4ed8">ST</div>
-            <div>
-              <div class="cust-name">Sharma Traders</div>
-              <span class="risk risk-med">medium risk</span>
-            </div>
-            <div style="margin-left:auto;text-align:right">
-              <div class="cust-due" style="color:var(--amber)">रू 1,45,000</div>
-              <div class="cust-days">Due in 6 days</div>
-            </div>
-          </div>
-          <div class="cust-row">
-            <div class="cust-avatar" style="background:#fee2e2;color:#dc2626">RB</div>
-            <div>
-              <div class="cust-name">Ram Bahadur &amp; Sons</div>
-              <span class="risk risk-high">high risk</span>
-            </div>
-            <div style="margin-left:auto;text-align:right">
-              <div class="cust-due" style="color:var(--red)">रू 2,32,000</div>
-              <div class="cust-days">Overdue 12 days</div>
-            </div>
-          </div>
-          <div class="cust-row">
-            <div class="cust-avatar" style="background:#dcfce7;color:#15803d">MK</div>
-            <div>
-              <div class="cust-name">Meena Kapada Ghar</div>
-              <span class="risk risk-low">low risk</span>
-            </div>
-            <div style="margin-left:auto;text-align:right">
-              <div class="cust-due" style="color:var(--green)">रू 48,500</div>
-              <div class="cust-days">Due in 18 days</div>
-            </div>
-          </div>
-
-          <div class="credit-bars">
-            <div class="bar-wrap">
-              <div class="bar-label-row">
-                <span>Ram Bahadur limit usage</span>
-                <span style="color:var(--red);font-weight:600">93%</span>
-              </div>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:93%;background:var(--red)"></div>
-              </div>
-            </div>
-            <div class="bar-wrap">
-              <div class="bar-label-row">
-                <span>Sharma Traders limit usage</span>
-                <span style="color:var(--amber);font-weight:600">72%</span>
-              </div>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:72%;background:var(--amber)"></div>
-              </div>
-            </div>
-            <div class="bar-wrap">
-              <div class="bar-label-row">
-                <span>Meena Kapada Ghar limit usage</span>
-                <span style="color:var(--green);font-weight:600">24%</span>
-              </div>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:24%;background:var(--green)"></div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-label">Due date</label>
+            <input class="form-input" type="date" id="due-date" />
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">Note / ref</label>
+          <input class="form-input" type="text" placeholder="Cheque no., narration…" id="sale-note" />
+        </div>
+      </div>
+    </div>
 
-        <!-- Daily summary -->
-        <div class="panel">
-          <div class="panel-title">
-            <span>📊 Daily summary</span>
-            <span class="panel-action">Full report →</span>
+    <!-- Items table -->
+    <table class="tbl" style="margin-bottom:0">
+      <thead>
+        <tr>
+          <th style="width:30%">Product</th>
+          <th>SKU</th>
+          <th style="width:60px">Qty</th>
+          <th>Rate (incl. VAT)</th>
+          <th>Base</th>
+          <th>VAT 13%</th>
+          <th>Total</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody id="sale-items-body">
+        <tr id="no-items-row"><td colspan="8" style="text-align:center;color:var(--ink3);padding:20px;font-size:12px">Search and add products above</td></tr>
+      </tbody>
+    </table>
+
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:12px;margin-top:14px">
+      <div class="vat-box">
+        <div class="vat-box-title">🧮 VAT breakdown — inclusive method (Nepal IRD)</div>
+        <div class="grid-2">
+          <div class="vat-cell">
+            <div class="vat-cell-label">Gross (VAT items)</div>
+            <div class="vat-cell-value" id="vb-gross">रू 0</div>
+            <div class="vat-cell-note">inclusive of 13%</div>
           </div>
-
-          <div class="summary-grid">
-            <div class="summary-cell">
-              <div class="summary-cell-label">Cash sales</div>
-              <div class="summary-cell-value" style="color:var(--green)">रू 72,000</div>
-            </div>
-            <div class="summary-cell">
-              <div class="summary-cell-label">Credit sales</div>
-              <div class="summary-cell-value" style="color:var(--accent)">रू 52,500</div>
-            </div>
-            <div class="summary-cell">
-              <div class="summary-cell-label">Payments received</div>
-              <div class="summary-cell-value" style="color:var(--ink)">रू 38,000</div>
-            </div>
-            <div class="summary-cell">
-              <div class="summary-cell-label">Output VAT collected</div>
-              <div class="summary-cell-value" style="color:var(--teal)">रू 14,209</div>
-            </div>
+          <div class="vat-cell">
+            <div class="vat-cell-label">Base price (÷1.13)</div>
+            <div class="vat-cell-value" id="vb-base">रू 0</div>
+            <div class="vat-cell-note">excl. VAT</div>
           </div>
-
-          <div class="top-products">
-            <div class="top-products-title">Top products today</div>
-            <div class="product-row"><span>Dhaka Fabric Roll</span><span>रू 32,000</span></div>
-            <div class="product-row"><span>Pashmina Shawl</span><span>रू 24,000</span></div>
-            <div class="product-row"><span>Cotton Thread</span><span>रू 18,000</span></div>
-            <div class="product-row"><span>Carpet (5×8 ft)</span><span>रू 14,500</span></div>
+          <div class="vat-cell">
+            <div class="vat-cell-label">VAT amount</div>
+            <div class="vat-cell-value" id="vb-vat" style="color:#16a34a">रू 0</div>
+            <div class="vat-cell-note">output VAT</div>
           </div>
-
-          <div class="export-row">
-            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">📄 Export PDF</button>
-            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">📊 Export Excel</button>
-            <button class="btn btn-outline" style="font-size:11px;padding:5px 11px;">💬 Share</button>
+          <div class="vat-cell">
+            <div class="vat-cell-label">Non-VAT items</div>
+            <div class="vat-cell-value" id="vb-novat" style="color:#6b7280">रू 0</div>
+            <div class="vat-cell-note">exempt</div>
           </div>
         </div>
+      </div>
+      <div class="totals-box">
+        <div class="total-row"><span>Subtotal (excl. VAT)</span><span id="t-sub">रू 0</span></div>
+        <div class="total-row" style="color:var(--teal)"><span>VAT @ 13% inclusive</span><span id="t-vat">रू 0</span></div>
+        <div class="total-row"><span>Non-VAT items</span><span id="t-novat">रू 0</span></div>
+        <div class="total-final"><span>Grand Total</span><span id="t-total">रू 0</span></div>
+        <div class="vat-note">VAT included in price. Formula: VAT = Total × 13 ÷ 113</div>
+      </div>
+    </div>
 
-      </div><!-- end panel-row -->
+    <div class="btn-row">
+      <button class="btn" onclick="clearSale()">🗑 Clear</button>
+      <button class="btn" onclick="toast('Bill sent on WhatsApp! 📲')">💬 WhatsApp Bill</button>
+      <button class="btn btn-green" onclick="confirmSale()">✓ Confirm &amp; Save</button>
+    </div>
+  </div>
+</div>
 
-    </div><!-- end content -->
-  </div><!-- end main -->
+<!-- ═══════════════════════════════════════ CREDIT LEDGER ═══ -->
+<div id="pg-credit" class="page">
+  <div class="grid-2" style="align-items:start">
+    <div class="panel">
+      <div class="panel-title">Customer Credit Summary</div>
+      <div id="credit-list"></div>
+    </div>
+    <div class="panel" id="credit-detail-panel">
+      <div class="panel-title">Select a customer to view ledger</div>
+      <div id="credit-detail"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">All Transactions</div>
+    <table class="tbl">
+      <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Amount</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="all-txn-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ INVENTORY ═══ -->
+<div id="pg-inventory" class="page">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Total Products</div><div class="stat-value" id="inv-total">—</div></div>
+    <div class="stat"><div class="stat-label">Low Stock Items</div><div class="stat-value dn" id="inv-low">—</div></div>
+    <div class="stat"><div class="stat-label">Out of Stock</div><div class="stat-value dn" id="inv-out">—</div></div>
+    <div class="stat"><div class="stat-label">Inventory Value</div><div class="stat-value" id="inv-value">—</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">
+      Product Catalogue
+      <div style="display:flex;gap:8px">
+        <input class="form-input" type="text" placeholder="Search…" id="inv-search" oninput="filterInventory()" style="width:180px;height:30px;font-size:12px" />
+        <select class="form-select" id="inv-cat" onchange="filterInventory()" style="width:130px;height:30px;font-size:12px">
+          <option value="">All categories</option>
+          <option>Fabric</option><option>Shawl</option><option>Thread</option><option>Carpet</option><option>Accessories</option>
+        </select>
+        <button class="btn btn-primary" onclick="openModal('add-product-modal')" style="height:30px;font-size:12px">+ Add Product</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Stock</th><th>Rate (incl. VAT)</th><th>Base</th><th>VAT</th><th>Status</th></tr></thead>
+      <tbody id="inv-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ REPORTS ═══ -->
+<div id="pg-reports" class="page">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Monthly Revenue</div><div class="stat-value">रू 8,24,500</div><div class="stat-sub up">↑ 11%</div></div>
+    <div class="stat"><div class="stat-label">Monthly Purchases</div><div class="stat-value">रू 5,12,000</div></div>
+    <div class="stat"><div class="stat-label">Gross Profit</div><div class="stat-value up">रू 3,12,500</div><div class="stat-sub up">37.9% margin</div></div>
+    <div class="stat"><div class="stat-label">Cash Collected</div><div class="stat-value">रू 6,10,000</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Monthly Sales Trend</div>
+      <div class="mini-chart" id="monthly-chart" style="height:80px"></div>
+      <div class="mini-chart-labels" id="monthly-labels"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Profit Breakdown</div>
+      <table class="tbl">
+        <thead><tr><th>Category</th><th>Revenue</th><th>Cost</th><th>Profit</th></tr></thead>
+        <tbody>
+          <tr><td>Fabric</td><td>रू 3,12,000</td><td>रू 1,90,000</td><td class="up">रू 1,22,000</td></tr>
+          <tr><td>Shawls</td><td>रू 2,24,000</td><td>रू 1,40,000</td><td class="up">रू 84,000</td></tr>
+          <tr><td>Carpets</td><td>रू 1,88,500</td><td>रू 1,10,000</td><td class="up">रू 78,500</td></tr>
+          <tr><td>Thread / Other</td><td>रू 1,00,000</td><td>रू 72,000</td><td class="up">रू 28,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Sales Report — Current Month
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="toast('PDF exported! 📄')">📄 Export PDF</button>
+        <button class="btn" onclick="toast('Excel exported! 📊')">📊 Export Excel</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Items</th><th>Subtotal</th><th>VAT</th><th>Total</th><th>Type</th></tr></thead>
+      <tbody id="report-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ VAT ═══ -->
+<div id="pg-vat" class="page">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Output VAT (sales)</div><div class="stat-value tl">रू 14,209</div></div>
+    <div class="stat"><div class="stat-label">Input VAT (purchases)</div><div class="stat-value" style="color:var(--purple)">रू 8,430</div></div>
+    <div class="stat"><div class="stat-label">Net VAT Payable</div><div class="stat-value dn">रू 5,779</div></div>
+    <div class="stat"><div class="stat-label">Filing deadline</div><div class="stat-value" style="font-size:14px">Shrawan 25</div><div class="stat-sub dn">6 days left</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Output VAT — Sales</div>
+      <table class="tbl">
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Taxable Amt</th><th>VAT 13%</th></tr></thead>
+        <tbody id="vat-output-body"></tbody>
+        <tfoot><tr><td colspan="2" style="font-weight:600;padding:7px 9px">Total</td><td style="font-weight:600;padding:7px 9px">रू 1,09,300</td><td style="font-weight:600;padding:7px 9px;color:var(--teal)">रू 14,209</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Input VAT — Purchases</div>
+      <table class="tbl">
+        <thead><tr><th>Bill No.</th><th>Supplier</th><th>Taxable Amt</th><th>VAT 13%</th></tr></thead>
+        <tbody id="vat-input-body"></tbody>
+        <tfoot><tr><td colspan="2" style="font-weight:600;padding:7px 9px">Total</td><td style="font-weight:600;padding:7px 9px">रू 64,846</td><td style="font-weight:600;padding:7px 9px;color:var(--purple)">रू 8,430</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">VAT Summary — Filing Report
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="toast('VAT report exported! 📄')">📄 Export PDF (IRD format)</button>
+        <button class="btn" onclick="toast('Excel exported! 📊')">📊 Excel</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="vat-cell">
+        <div class="vat-cell-label">Total Sales (incl. VAT)</div>
+        <div class="vat-cell-value">रू 1,23,509</div>
+        <div class="vat-cell-note">VAT + non-VAT items</div>
+      </div>
+      <div class="vat-cell">
+        <div class="vat-cell-label">Taxable Sales (base)</div>
+        <div class="vat-cell-value">रू 1,09,300</div>
+        <div class="vat-cell-note">÷ 1.13</div>
+      </div>
+      <div class="vat-cell">
+        <div class="vat-cell-label">Output VAT</div>
+        <div class="vat-cell-value" style="color:var(--teal)">रू 14,209</div>
+        <div class="vat-cell-note">× 13/113</div>
+      </div>
+      <div class="vat-cell">
+        <div class="vat-cell-label">Total Purchases (incl. VAT)</div>
+        <div class="vat-cell-value">रू 73,276</div>
+        <div class="vat-cell-note">VAT items only</div>
+      </div>
+      <div class="vat-cell">
+        <div class="vat-cell-label">Taxable Purchases (base)</div>
+        <div class="vat-cell-value">रू 64,846</div>
+        <div class="vat-cell-note">÷ 1.13</div>
+      </div>
+      <div class="vat-cell">
+        <div class="vat-cell-label">Input VAT</div>
+        <div class="vat-cell-value" style="color:var(--purple)">रू 8,430</div>
+        <div class="vat-cell-note">claimable</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;background:#fff3cd;border:0.5px solid #ffc107;border-radius:var(--r-sm);padding:11px 14px;font-size:13px;color:#856404">
+      <strong>Net VAT Payable to IRD:</strong> रू 14,209 − रू 8,430 = <strong>रू 5,779</strong> &nbsp;|&nbsp; Due: Shrawan 25, 2082
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+</div><!-- end body -->
 </div><!-- end app -->
 
+<!-- MODALS -->
+<div class="modal-backdrop" id="payment-modal">
+  <div class="modal">
+    <div class="modal-title">Record Payment <button class="modal-close" onclick="closeModal('payment-modal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Customer</label><select class="form-select" id="pay-customer"></select></div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Amount (रू)</label><input class="form-input" type="number" id="pay-amount" placeholder="0" /></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="pay-date" /></div>
+    </div>
+    <div class="form-group"><label class="form-label">Method</label><select class="form-select"><option>Cash</option><option>Bank Transfer</option><option>Cheque</option><option>eSewa</option><option>Khalti</option></select></div>
+    <div class="form-group"><label class="form-label">Reference / Note</label><input class="form-input" type="text" placeholder="Cheque no., txn ID…" /></div>
+    <div class="btn-row"><button class="btn" onclick="closeModal('payment-modal')">Cancel</button><button class="btn btn-green" onclick="recordPayment()">✓ Record Payment</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="add-product-modal">
+  <div class="modal">
+    <div class="modal-title">Add Product <button class="modal-close" onclick="closeModal('add-product-modal')">✕</button></div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Product name</label><input class="form-input" type="text" id="np-name" placeholder="Dhaka Fabric Roll" /></div>
+      <div class="form-group"><label class="form-label">SKU</label><input class="form-input" type="text" id="np-sku" placeholder="DH-0001" /></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="np-cat"><option>Fabric</option><option>Shawl</option><option>Thread</option><option>Carpet</option><option>Accessories</option></select></div>
+      <div class="form-group"><label class="form-label">VAT applicable?</label><select class="form-select" id="np-vat"><option value="1">Yes (13%)</option><option value="0">No</option></select></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Inclusive rate (रू)</label><input class="form-input" type="number" id="np-rate" placeholder="1130" oninput="calcAddProduct()" /></div>
+      <div class="form-group"><label class="form-label">Opening stock</label><input class="form-input" type="number" id="np-stock" placeholder="100" /></div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--r-sm);padding:10px 12px;font-size:12px;color:var(--ink2);margin-bottom:10px" id="np-breakdown">Enter rate to see VAT breakdown</div>
+    <div class="btn-row"><button class="btn" onclick="closeModal('add-product-modal')">Cancel</button><button class="btn btn-green" onclick="addProduct()">+ Add Product</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal">
+    <div class="modal-title">Settings <button class="modal-close" onclick="closeModal('settings-modal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Business name</label><input class="form-input" value="थोक बजार Wholesale" /></div>
+    <div class="form-group"><label class="form-label">PAN / VAT registration no.</label><input class="form-input" value="603-456-789" /></div>
+    <div class="form-group"><label class="form-label">Address</label><input class="form-input" value="Ason, Kathmandu" /></div>
+    <div class="form-group"><label class="form-label">Default credit days</label><input class="form-input" type="number" value="15" /></div>
+    <div class="form-group"><label class="form-label">Default credit limit (रू)</label><input class="form-input" type="number" value="200000" /></div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Currency symbol</label><input class="form-input" value="रू" /></div>
+      <div class="form-group"><label class="form-label">VAT rate (%)</label><input class="form-input" type="number" value="13" /></div>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="closeModal('settings-modal')">Cancel</button><button class="btn btn-green" onclick="toast('Settings saved!');closeModal('settings-modal')">Save Settings</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DUMMY DATA
+// ═══════════════════════════════════════
+const customers = [
+  {id:1,name:'Sharma Traders',initials:'ST',color:'#dbeafe',tc:'#1d4ed8',limit:200000,balance:145000,risk:'m',days:6,overdue:false},
+  {id:2,name:'Ram Bahadur & Sons',initials:'RB',color:'#fee2e2',tc:'#dc2626',limit:250000,balance:232000,risk:'h',days:-12,overdue:true},
+  {id:3,name:'Meena Kapada Ghar',initials:'MK',color:'#dcfce7',tc:'#15803d',limit:150000,balance:48500,risk:'l',days:18,overdue:false},
+  {id:4,name:'Prabhat Emporium',initials:'PE',color:'#ede9fe',tc:'#6d28d9',limit:300000,balance:95000,risk:'l',days:10,overdue:false},
+  {id:5,name:'Himalayan Cloth Store',initials:'HC',color:'#fef3c7',tc:'#d97706',limit:180000,balance:160000,risk:'m',days:3,overdue:false},
+];
+
+const products = [
+  {id:1,name:'Dhaka Fabric Roll',sku:'DH-0041',cat:'Fabric',rate:1130,vat:true,stock:142},
+  {id:2,name:'Pashmina Shawl',sku:'PS-0018',cat:'Shawl',rate:2260,vat:true,stock:65},
+  {id:3,name:'Cotton Thread',sku:'CT-0099',cat:'Thread',rate:250,vat:false,stock:8},
+  {id:4,name:'Handmade Carpet 5×8',sku:'CP-0012',cat:'Carpet',rate:11300,vat:true,stock:22},
+  {id:5,name:'Wool Shawl (Plain)',sku:'WS-0033',cat:'Shawl',rate:1695,vat:true,stock:3},
+  {id:6,name:'Silk Thread',sku:'ST-0077',cat:'Thread',rate:450,vat:false,stock:0},
+  {id:7,name:'Dhaka Topi',sku:'DT-0055',cat:'Accessories',rate:565,vat:true,stock:90},
+  {id:8,name:'Madal Cloth Roll',sku:'MD-0022',cat:'Fabric',rate:904,vat:true,stock:55},
+  {id:9,name:'Carpet Runner 3×12',sku:'CR-0007',cat:'Carpet',rate:7910,vat:true,stock:12},
+  {id:10,name:'Embroidery Thread',sku:'ET-0088',cat:'Thread',rate:180,vat:false,stock:200},
+];
+
+const transactions = [
+  {id:'INV-2025-0481',date:'2025-07-14',custId:1,items:3,subtotal:25000,vat:2600,total:27600,type:'credit',status:'partial'},
+  {id:'INV-2025-0480',date:'2025-07-14',custId:3,items:2,subtotal:15000,vat:1500,total:16500,type:'cash',status:'paid'},
+  {id:'INV-2025-0479',date:'2025-07-13',custId:2,items:5,subtotal:48000,vat:5000,total:53000,type:'credit',status:'overdue'},
+  {id:'INV-2025-0478',date:'2025-07-13',custId:4,items:1,subtotal:11300,vat:1300,total:12600,type:'cash',status:'paid'},
+  {id:'INV-2025-0477',date:'2025-07-12',custId:5,items:4,subtotal:32000,vat:3200,total:35200,type:'credit',status:'due'},
+  {id:'INV-2025-0476',date:'2025-07-12',custId:1,items:2,subtotal:18000,vat:1800,total:19800,type:'credit',status:'paid'},
+  {id:'INV-2025-0475',date:'2025-07-11',custId:2,items:3,subtotal:22000,vat:2200,total:24200,type:'credit',status:'overdue'},
+  {id:'INV-2025-0474',date:'2025-07-10',custId:3,items:6,subtotal:41000,vat:4100,total:45100,type:'cash',status:'paid'},
+];
+
+const vatOutput = [
+  {inv:'INV-2025-0481',cust:'Sharma Traders',base:25000,vat:2600},
+  {inv:'INV-2025-0480',cust:'Meena Kapada Ghar',base:15000,vat:1500},
+  {inv:'INV-2025-0479',cust:'Ram Bahadur & Sons',base:48000,vat:5000},
+  {inv:'INV-2025-0478',cust:'Prabhat Emporium',base:11300,vat:1300},
+  {inv:'INV-2025-0477',cust:'Himalayan Cloth Store',base:32000,vat:3200},
+];
+const vatInput = [
+  {bill:'BILL-0181',sup:'Nepal Textile Mills',base:30000,vat:3900},
+  {bill:'BILL-0180',sup:'Pashmina Hub Pvt.',base:22000,vat:2860},
+  {bill:'BILL-0179',sup:'Carpet Factory Bhaktapur',base:12846,vat:1670},
+];
+
+const weeklySales = [62000,88000,104000,91000,118000,97000,124500];
+const weekDays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const monthlySales = [520000,610000,480000,730000,695000,810000,824500];
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+
+const topProducts = [
+  {name:'Dhaka Fabric Roll',units:32,revenue:32000},
+  {name:'Pashmina Shawl',units:14,revenue:24000},
+  {name:'Cotton Thread',units:80,revenue:18000},
+  {name:'Carpet 5×8',units:4,revenue:14500},
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let saleType = 'cash';
+let saleItems = [];
+let nextInvNum = 484;
+let allProducts = [...products];
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showPage(page, tabEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg-' + page).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+}
+function setSb(el) {
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════
+function fmt(n) { return 'रू ' + Math.round(n).toLocaleString('en-IN'); }
+function vatFrom(total) { return Math.round(total * 13 / 113); }
+function baseFrom(total) { return Math.round(total * 100 / 113); }
+
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function buildDashboard() {
+  // Chart
+  buildMiniChart('dash-chart', 'dash-labels', weeklySales, weekDays, '#2563eb');
+  // Top products
+  const tb = document.getElementById('top-products-body');
+  tb.innerHTML = topProducts.map(p => `<tr><td>${p.name}</td><td>${p.units}</td><td style="font-weight:500">${fmt(p.revenue)}</td></tr>`).join('');
+  // Customer list
+  const cl = document.getElementById('dash-cust-list');
+  cl.innerHTML = customers.slice(0,3).map(c => {
+    const pct = Math.round(c.balance / c.limit * 100);
+    const col = c.risk === 'h' ? '#dc2626' : c.risk === 'm' ? '#d97706' : '#16a34a';
+    const dueText = c.overdue ? `Overdue ${Math.abs(c.days)} days` : `Due in ${c.days} days`;
+    return `<div class="cust-row">
+      <div class="cust-av" style="background:${c.color};color:${c.tc}">${c.initials}</div>
+      <div>
+        <div style="font-size:12px;font-weight:500">${c.name}</div>
+        <span class="risk-${c.risk}">${{h:'high',m:'medium',l:'low'}[c.risk]} risk</span>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:12px;font-weight:600;color:${col}">${fmt(c.balance)}</div>
+        <div style="font-size:10px;color:var(--ink3)">${dueText}</div>
+      </div>
+    </div>`;
+  }).join('');
+  // Recent txn
+  const rt = document.getElementById('recent-txn-body');
+  rt.innerHTML = transactions.slice(0,5).map(t => {
+    const cust = customers.find(c => c.id === t.custId);
+    const sc = {paid:'b-paid',partial:'b-partial',due:'b-due',overdue:'b-overdue'}[t.status];
+    return `<tr><td style="font-family:var(--mono);font-size:11px">${t.id}</td><td>${cust.name}</td><td style="font-weight:500">${fmt(t.total)}</td><td><span class="badge ${t.type==='cash'?'b-cash':'b-credit'}">${t.type}</span></td></tr>`;
+  }).join('');
+}
+
+function buildMiniChart(chartId, labelId, data, labels, color) {
+  const chart = document.getElementById(chartId);
+  const labelEl = document.getElementById(labelId);
+  const max = Math.max(...data);
+  chart.innerHTML = data.map((v,i) => {
+    const h = Math.round((v / max) * 100);
+    return `<div class="mini-bar" style="height:${h}%;background:${color};opacity:${i===data.length-1?'1':'0.55'}" title="${labels[i]}: ${fmt(v)}"></div>`;
+  }).join('');
+  labelEl.innerHTML = labels.map(l => `<span class="mini-chart-label">${l}</span>`).join('');
+}
+
+// ═══════════════════════════════════════
+// SALE
+// ═══════════════════════════════════════
+function initSale() {
+  const today = new Date();
+  document.getElementById('sale-date').value = today.toISOString().slice(0,10);
+  const due = new Date(today); due.setDate(due.getDate()+15);
+  document.getElementById('due-date').value = due.toISOString().slice(0,10);
+  document.getElementById('inv-num').textContent = `Invoice #INV-2025-0${nextInvNum}`;
+  document.getElementById('inv-date').textContent = today.toLocaleDateString('en-NP',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  // Populate customer select
+  const sel = document.getElementById('sale-customer');
+  sel.innerHTML = '<option value="">— Select customer —</option>' +
+    customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+}
+
+function setSaleType(type) {
+  saleType = type;
+  document.getElementById('btn-cash').className = 'toggle-btn' + (type==='cash' ? ' t-cash' : '');
+  document.getElementById('btn-credit').className = 'toggle-btn' + (type==='credit' ? ' t-credit' : '');
+}
+
+function onCustomerChange() {
+  const id = parseInt(document.getElementById('sale-customer').value);
+  const box = document.getElementById('credit-info-box');
+  if (!id) { box.style.display='none'; return; }
+  const c = customers.find(x => x.id === id);
+  const avail = c.limit - c.balance;
+  const pct = Math.round(c.balance / c.limit * 100);
+  const col = pct > 85 ? '#dc2626' : pct > 60 ? '#d97706' : '#16a34a';
+  box.style.display = 'block';
+  box.innerHTML = `⚠ Credit limit: ${fmt(c.limit)} &nbsp;|&nbsp; Used: <strong style="color:${col}">${fmt(c.balance)} (${pct}%)</strong> &nbsp;|&nbsp; Available: <strong>${fmt(avail)}</strong>`;
+}
+
+function searchProducts() {
+  const q = document.getElementById('prod-search').value.toLowerCase();
+  const res = document.getElementById('prod-results');
+  if (q.length < 1) { res.classList.remove('open'); return; }
+  const matches = allProducts.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q));
+  if (matches.length === 0) { res.classList.remove('open'); return; }
+  res.innerHTML = matches.map(p => `<div class="search-result-item" onclick="addItem(${p.id})">
+    <div>${p.name} ${p.vat ? '<span class="badge b-vat">VAT</span>' : '<span class="badge b-novat">No VAT</span>'}</div>
+    <span>${p.sku} · ${fmt(p.rate)}</span>
+  </div>`).join('');
+  res.classList.add('open');
+}
+
+function addItem(pid) {
+  document.getElementById('prod-results').classList.remove('open');
+  document.getElementById('prod-search').value = '';
+  const existing = saleItems.find(i => i.id === pid);
+  if (existing) { existing.qty++; } else { const p = allProducts.find(x => x.id === pid); saleItems.push({...p, qty:1}); }
+  renderSaleItems();
+}
+
+function renderSaleItems() {
+  const tbody = document.getElementById('sale-items-body');
+  if (saleItems.length === 0) {
+    tbody.innerHTML = '<tr id="no-items-row"><td colspan="8" style="text-align:center;color:var(--ink3);padding:20px;font-size:12px">Search and add products above</td></tr>';
+    updateTotals(); return;
+  }
+  tbody.innerHTML = saleItems.map((item,idx) => {
+    const lineTotal = item.rate * item.qty;
+    const vamt = item.vat ? vatFrom(lineTotal) : 0;
+    const base = item.vat ? baseFrom(lineTotal) : lineTotal;
+    return `<tr>
+      <td>${item.name} ${item.vat ? '<span class="badge b-vat">VAT</span>' : '<span class="badge b-novat">No VAT</span>'}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--ink3)">${item.sku}</td>
+      <td><input type="number" min="1" value="${item.qty}" onchange="setQty(${idx},this.value)" style="width:54px;height:28px;border:0.5px solid var(--border2);border-radius:4px;padding:0 6px;font-size:12px;font-family:var(--font);background:var(--surface2)" /></td>
+      <td>${fmt(item.rate)}</td>
+      <td style="color:var(--ink3)">${fmt(base)}</td>
+      <td style="color:var(--teal)">${item.vat ? fmt(vamt) : '—'}</td>
+      <td style="font-weight:600">${fmt(lineTotal)}</td>
+      <td><button onclick="removeItem(${idx})" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:14px">✕</button></td>
+    </tr>`;
+  }).join('');
+  updateTotals();
+}
+
+function setQty(idx, val) {
+  saleItems[idx].qty = Math.max(1, parseInt(val)||1);
+  renderSaleItems();
+}
+function removeItem(idx) {
+  saleItems.splice(idx,1);
+  renderSaleItems();
+}
+
+function updateTotals() {
+  let gross=0, novatTotal=0;
+  saleItems.forEach(i => {
+    const lt = i.rate * i.qty;
+    if (i.vat) gross += lt; else novatTotal += lt;
+  });
+  const vatAmt = vatFrom(gross);
+  const base = baseFrom(gross);
+  const grand = gross + novatTotal;
+
+  document.getElementById('vb-gross').textContent = fmt(gross);
+  document.getElementById('vb-base').textContent = fmt(base);
+  document.getElementById('vb-vat').textContent = fmt(vatAmt);
+  document.getElementById('vb-novat').textContent = fmt(novatTotal);
+  document.getElementById('t-sub').textContent = fmt(base);
+  document.getElementById('t-vat').textContent = fmt(vatAmt);
+  document.getElementById('t-novat').textContent = fmt(novatTotal);
+  document.getElementById('t-total').textContent = fmt(grand);
+}
+
+function confirmSale() {
+  const custId = document.getElementById('sale-customer').value;
+  if (!custId) { toast('⚠ Please select a customer'); return; }
+  if (saleItems.length === 0) { toast('⚠ Add at least one product'); return; }
+  toast(`✓ Invoice #INV-2025-0${nextInvNum} saved! Printing…`);
+  nextInvNum++;
+  clearSale();
+}
+
+function clearSale() {
+  saleItems = [];
+  document.getElementById('sale-customer').value = '';
+  document.getElementById('credit-info-box').style.display = 'none';
+  document.getElementById('sale-note').value = '';
+  renderSaleItems();
+  document.getElementById('inv-num').textContent = `Invoice #INV-2025-0${nextInvNum}`;
+}
+
+function quickRepeat() {
+  showPage('sale', document.querySelectorAll('.nav-tab')[1]);
+  const sel = document.getElementById('sale-customer');
+  sel.value = '1';
+  onCustomerChange();
+  setSaleType('credit');
+  // Pre-fill last items
+  saleItems = [{...products[0], qty:5}, {...products[1], qty:2}];
+  renderSaleItems();
+  toast('Last order loaded for Sharma Traders');
+}
+
+// ═══════════════════════════════════════
+// CREDIT LEDGER
+// ═══════════════════════════════════════
+function buildCredit() {
+  const list = document.getElementById('credit-list');
+  list.innerHTML = customers.map(c => {
+    const pct = Math.round(c.balance / c.limit * 100);
+    const col = c.risk==='h'?'#dc2626':c.risk==='m'?'#d97706':'#16a34a';
+    const dueText = c.overdue ? `<span style="color:#dc2626">Overdue ${Math.abs(c.days)} days</span>` : `Due in ${c.days} days`;
+    return `<div class="cust-row" style="cursor:pointer" onclick="showCreditDetail(${c.id})">
+      <div class="cust-av" style="background:${c.color};color:${c.tc}">${c.initials}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${c.name}</div>
+        <div class="bar-track" style="margin-top:4px;height:4px">
+          <div class="bar-fill" style="width:${pct}%;background:${col}"></div>
+        </div>
+        <div style="font-size:10px;color:var(--ink3);margin-top:2px">${fmt(c.balance)} / ${fmt(c.limit)} (${pct}%)</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <span class="risk-${c.risk}">${{h:'high',m:'medium',l:'low'}[c.risk]}</span>
+        <div style="font-size:10px;margin-top:3px">${dueText}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // All transactions
+  const at = document.getElementById('all-txn-body');
+  at.innerHTML = transactions.map(t => {
+    const cust = customers.find(c => c.id === t.custId);
+    const sc = {paid:'b-paid',partial:'b-partial',due:'b-due',overdue:'b-overdue'}[t.status];
+    return `<tr>
+      <td style="font-size:11px;color:var(--ink3)">${t.date}</td>
+      <td style="font-family:var(--mono);font-size:11px">${t.id}</td>
+      <td>${cust.name}</td>
+      <td style="font-weight:500">${fmt(t.total)}</td>
+      <td><span class="badge ${t.type==='cash'?'b-cash':'b-credit'}">${t.type}</span></td>
+      <td><span class="badge ${sc}">${t.status}</span></td>
+      <td><button class="btn" style="padding:3px 9px;font-size:11px" onclick="openModal('payment-modal')">Pay</button></td>
+    </tr>`;
+  }).join('');
+
+  // Payment modal customers
+  const ps = document.getElementById('pay-customer');
+  ps.innerHTML = customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('pay-date').value = new Date().toISOString().slice(0,10);
+}
+
+function showCreditDetail(cid) {
+  const c = customers.find(x => x.id === cid);
+  const txns = transactions.filter(t => t.custId === cid);
+  const pct = Math.round(c.balance / c.limit * 100);
+  const col = c.risk==='h'?'#dc2626':c.risk==='m'?'#d97706':'#16a34a';
+  const panel = document.getElementById('credit-detail-panel');
+  const detail = document.getElementById('credit-detail');
+  panel.querySelector('.panel-title').textContent = c.name + ' — Credit Ledger';
+  detail.innerHTML = `
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="vat-cell" style="flex:1"><div class="vat-cell-label">Outstanding</div><div style="font-size:16px;font-weight:600;color:${col}">${fmt(c.balance)}</div></div>
+      <div class="vat-cell" style="flex:1"><div class="vat-cell-label">Credit limit</div><div style="font-size:16px;font-weight:600">${fmt(c.limit)}</div></div>
+      <div class="vat-cell" style="flex:1"><div class="vat-cell-label">Available</div><div style="font-size:16px;font-weight:600;color:#16a34a">${fmt(c.limit - c.balance)}</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-label-row"><span>Limit used</span><span style="color:${col};font-weight:600">${pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:6px">Transaction history</div>
+    <table class="tbl">
+      <thead><tr><th>Date</th><th>Invoice</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>${txns.map(t => {
+        const sc = {paid:'b-paid',partial:'b-partial',due:'b-due',overdue:'b-overdue'}[t.status];
+        return `<tr><td style="font-size:11px;color:var(--ink3)">${t.date}</td><td style="font-family:var(--mono);font-size:11px">${t.id}</td><td style="font-weight:500">${fmt(t.total)}</td><td><span class="badge ${sc}">${t.status}</span></td></tr>`;
+      }).join('')}</tbody>
+    </table>
+    <div class="btn-row" style="margin-top:10px">
+      <button class="btn btn-green" onclick="openModal('payment-modal')">+ Record Payment</button>
+    </div>`;
+}
+
+function recordPayment() {
+  const amt = document.getElementById('pay-amount').value;
+  if (!amt || amt <= 0) { toast('⚠ Enter valid amount'); return; }
+  toast(`✓ Payment of ${fmt(amt)} recorded!`);
+  closeModal('payment-modal');
+  document.getElementById('pay-amount').value = '';
+}
+
+// ═══════════════════════════════════════
+// INVENTORY
+// ═══════════════════════════════════════
+function buildInventory() {
+  renderInventory(allProducts);
+  const low = allProducts.filter(p => p.stock > 0 && p.stock <= 10).length;
+  const out = allProducts.filter(p => p.stock === 0).length;
+  const val = allProducts.reduce((s,p) => s + (p.vat ? baseFrom(p.rate) : p.rate) * p.stock, 0);
+  document.getElementById('inv-total').textContent = allProducts.length;
+  document.getElementById('inv-low').textContent = low;
+  document.getElementById('inv-out').textContent = out;
+  document.getElementById('inv-value').textContent = fmt(val);
+}
+
+function renderInventory(list) {
+  const tbody = document.getElementById('inv-body');
+  tbody.innerHTML = list.map(p => {
+    const base = p.vat ? baseFrom(p.rate) : p.rate;
+    const vamt = p.vat ? vatFrom(p.rate) : 0;
+    const sc = p.stock === 0 ? 's-out' : p.stock <= 10 ? 's-low' : 's-ok';
+    const sl = p.stock === 0 ? 'Out of stock' : p.stock <= 10 ? 'Low stock' : 'In stock';
+    return `<tr>
+      <td>${p.name}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--ink3)">${p.sku}</td>
+      <td>${p.cat}</td>
+      <td style="font-weight:500">${p.stock}</td>
+      <td>${fmt(p.rate)}</td>
+      <td style="color:var(--ink3)">${fmt(base)}</td>
+      <td>${p.vat ? `<span style="color:var(--teal)">${fmt(vamt)}</span>` : '—'}</td>
+      <td><span class="stock-chip ${sc}">${sl}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterInventory() {
+  const q = document.getElementById('inv-search').value.toLowerCase();
+  const cat = document.getElementById('inv-cat').value;
+  const filtered = allProducts.filter(p =>
+    (!q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)) &&
+    (!cat || p.cat === cat)
+  );
+  renderInventory(filtered);
+}
+
+function calcAddProduct() {
+  const rate = parseFloat(document.getElementById('np-rate').value)||0;
+  const isVat = document.getElementById('np-vat').value === '1';
+  const el = document.getElementById('np-breakdown');
+  if (!rate || !isVat) { el.textContent = isVat ? 'Enter rate to see VAT breakdown' : 'No VAT applicable on this product'; return; }
+  const base = baseFrom(rate);
+  const vat = vatFrom(rate);
+  el.innerHTML = `Inclusive rate: <strong>${fmt(rate)}</strong> = Base: <strong>${fmt(base)}</strong> + VAT 13%: <strong style="color:var(--teal)">${fmt(vat)}</strong>`;
+}
+
+function addProduct() {
+  const name = document.getElementById('np-name').value.trim();
+  const sku = document.getElementById('np-sku').value.trim();
+  const rate = parseFloat(document.getElementById('np-rate').value)||0;
+  const stock = parseInt(document.getElementById('np-stock').value)||0;
+  const cat = document.getElementById('np-cat').value;
+  const vat = document.getElementById('np-vat').value === '1';
+  if (!name || !sku || !rate) { toast('⚠ Fill all required fields'); return; }
+  allProducts.push({id: allProducts.length+1, name, sku, cat, rate, vat, stock});
+  buildInventory();
+  closeModal('add-product-modal');
+  toast(`✓ ${name} added to catalogue`);
+  document.getElementById('np-name').value='';
+  document.getElementById('np-sku').value='';
+  document.getElementById('np-rate').value='';
+  document.getElementById('np-stock').value='';
+}
+
+// ═══════════════════════════════════════
+// REPORTS
+// ═══════════════════════════════════════
+function buildReports() {
+  buildMiniChart('monthly-chart', 'monthly-labels', monthlySales, months, '#7c3aed');
+  const rb = document.getElementById('report-body');
+  rb.innerHTML = transactions.map(t => {
+    const cust = customers.find(c => c.id === t.custId);
+    return `<tr>
+      <td style="font-size:11px;color:var(--ink3)">${t.date}</td>
+      <td style="font-family:var(--mono);font-size:11px">${t.id}</td>
+      <td>${cust.name}</td>
+      <td>${t.items}</td>
+      <td>${fmt(t.subtotal)}</td>
+      <td style="color:var(--teal)">${fmt(t.vat)}</td>
+      <td style="font-weight:600">${fmt(t.total)}</td>
+      <td><span class="badge ${t.type==='cash'?'b-cash':'b-credit'}">${t.type}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// VAT
+// ═══════════════════════════════════════
+function buildVat() {
+  const ob = document.getElementById('vat-output-body');
+  ob.innerHTML = vatOutput.map(v => `<tr><td style="font-family:var(--mono);font-size:11px">${v.inv}</td><td>${v.cust}</td><td>${fmt(v.base)}</td><td style="color:var(--teal);font-weight:500">${fmt(v.vat)}</td></tr>`).join('');
+  const ib = document.getElementById('vat-input-body');
+  ib.innerHTML = vatInput.map(v => `<tr><td style="font-family:var(--mono);font-size:11px">${v.bill}</td><td>${v.sup}</td><td>${fmt(v.base)}</td><td style="color:var(--purple);font-weight:500">${fmt(v.vat)}</td></tr>`).join('');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+buildDashboard();
+initSale();
+buildCredit();
+buildInventory();
+buildReports();
+buildVat();
+
+// Close search dropdown on outside click
+document.addEventListener('click', e => {
+  if (!document.getElementById('prod-search').contains(e.target)) {
+    document.getElementById('prod-results').classList.remove('open');
+  }
+});
+</script>
 </body>
 </html>
